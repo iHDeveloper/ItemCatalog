@@ -106,6 +106,16 @@ def main():
     return render_template('main.html', categories = categories, latestItems = latestItems, login_session = login_session)
 
 
+@app.route('/catalogs/new', methods=['GET', 'POST'])
+def newCatalog(catalog_name):
+    if request.method == 'POST':
+        catalog = Catalog(name = request.form['name'], user_id = login_session['user_id'])
+        session.add(catalog)
+        session.commit()
+        return redirect(url_for('main'))
+    return render_template('newCatalog.html', catalog = catalog)
+
+
 @app.route('/catalog/<catalog_name>/items')
 def showItems(catalog_name):
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
@@ -118,6 +128,30 @@ def showItem(catalog_name, item_name):
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
     item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
     return render_template('item.html', item = item, catalog = catalog, login_session = login_session)
+
+
+@app.route('/catalog/<catalog_name>/<item_name>/edit', methods=['GET', 'POST'])
+def editItem(catalog_name, item_name):
+    catalog = session.query(Catalog).filter_by(name = catalog_name).one()
+    item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
+    if request.method == 'POST':
+        item.name = request.form['name']
+        item.description = request.form['description']
+        session.add(item)
+        session.commit()
+        return redirect(url_for('showItems', catalog_name = catalog.name))
+    return render_template('editItem.html', catalog = catalog, item = item)
+
+
+@app.route('/catalog/<catalog_name>/<item_name>/delete', methods=['GET', 'POST'])
+def deleteItem(catalog_name, item_name):
+    catalog = session.query(Catalog).filter_by(name = catalog_name).one()
+    item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
+    if request.method == 'POST':
+        session.delete(item)
+        session.commit()
+        return redirect(url_for('showItems', catalog_name = catalog.name))
+    return render_template('deleteItem.html', catalog = catalog, item = item)
 
 
 def getUserID(email):

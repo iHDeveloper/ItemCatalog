@@ -1,0 +1,122 @@
+body {
+    margin: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+div.header {
+    padding-top: .4em;
+    padding-bottom: .4em;
+    padding-left: 1em;
+    background-color: darkcyan;
+    color: white;
+}
+
+div.container {
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+div.box {
+    border: 1px solid black;
+    border-radius: 5px 5px 5px 5px;
+    background-color: rgba(255, 255, 255, .4);
+    padding: 5px 5px 5px 5px;
+    margin-top: 1em;
+}
+
+h1.header {
+    margin: 0;
+    border: 1px solid darkslategray;
+    border-radius: 5px 5px 5px 5px;
+    background-color: darkseagreen;
+    color: white;
+    padding-left: 5px;
+    margin-right: 75%;
+}
+
+h1.header-latest-items {
+    margin-right: 73%;
+}
+
+ul.category {
+    list-style-type: none;
+    margin-right: 50%;
+    padding-left: .6em;
+    width: 100%;
+}
+
+ul.category>li {
+    margin-right: 1.7em;
+    margin-bottom: .5em;
+    border: 1px solid darkslategrey;
+    color: darkslategrey;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+    float: left;
+    min-width: 20%;
+    max-width: 30%;
+    transition: .3s;
+}
+
+ul.category>li:hover {
+    background-color: darkslategrey;
+    color: white;
+    border-color: darkslategrey;
+    cursor: pointer;
+}
+
+ul.items>li {
+    min-width: 45%;
+}
+
+div.clearer {
+    clear: both;
+    height: 0;
+}
+
+a.link {
+    text-decoration: none;
+    color: darkseagreen;
+}
+
+a.link:hover {
+    color: white;
+}
+
+a.header-link {
+    text-decoration: none;
+    color: white;
+}
+
+a.header-button {
+    text-decoration: none;
+    color: white;
+    background-color: darkseagreen;
+    border: 1px solid white;
+    padding: 10px 10px 10px 10px;
+    border-radius: 5px;
+    float: left;
+    transition: .2s;
+}
+
+a.header-button:hover {
+    cursor: pointer;
+    background-color: white;
+    color: darkgreen;
+}
+
+ul.header {
+    list-style-type: none;
+    padding-top: .2em;
+    margin: 0;
+    padding: 5px 5px 5px 5px;
+}
+
+li.header-left {
+    margin-right: 75%;
+}
+
+li.header {
+    float: left;
+}

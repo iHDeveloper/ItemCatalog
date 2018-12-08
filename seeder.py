@@ -22,7 +22,7 @@ def catalog(name, user_id):
 
 def item(name, catalog_id, description):
     item = Item(name = name, catalog_id = catalog_id, description = description)
-    session.add(mouses_v1)
+    session.add(item)
     session.commit()
     return item
 

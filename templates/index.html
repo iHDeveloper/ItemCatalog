@@ -6,75 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Item Catalog</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
-        }
-        
-        .firstItem {
-            margin-top: 0;
-        }
-        
-        div.header {
-            padding-top: .4em;
-            padding-bottom: .4em;
-            padding-left: 1em;
-            background-color: darkcyan;
-            color: white;
-        }
-        
-        div.container {
-            margin-top: 1em;
-            margin-left: 20%;
-            margin-right: 20%;
-        }
-        
-        div.box {
-            border: 1px solid black;
-            border-radius: 5px 5px 5px 5px;
-            background-color: rgba(255, 255, 255, .4);
-            padding: 5px 5px 5px 5px;
-        }
-        
-        h1.header {
-            margin: 0;
-            border: 1px solid darkslategray;
-            border-radius: 5px 5px 5px 5px;
-            background-color: darkseagreen;
-            color: white;
-            padding-left: 5px;
-            margin-right: 75%;
-        }
-        
-        ul.category {
-            list-style-type: none;
-            margin-right: 50%;
-        }
-        
-        ul.category>li {
-            margin-top: 1em;
-            border: 1px solid black;
-            border-radius: 5px;
-            padding: 5px 5px 5px 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
 </head>
 
 <body>
     <div class="header">
-        <h1>Item Catalog</h1>
+        <ul class="header">
+            <li class="header header-left">
+                <h1><a class="header-link" href="{{ url_for('main') }}">Item Catalog</a></h1>
+            </li>
+        </ul>
+        <ul class="header header-right">
+            <li class="header"><a class="header-button" herf="#">Log In</a></li>
+        </ul>
+        <div class="clearer"></div>
     </div>
-    <div class="container">
-        <div class="box">
-            <h1 class="header">Categories</h1>
-            <ul class="category">
-                <li>Category 1</li>
-                <li>Category 2</li>
-            </ul>
-        </div>
-    </div>
+    {% block content %} {% endblock %}
 </body>
 
 </html>

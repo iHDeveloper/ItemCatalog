@@ -1,0 +1,22 @@
+{% extends "index.html" %} {% block content %}
+<div class="container">
+    <div class="box">
+        <h1 class="header">Categories</h1>
+        <ul class="category">
+            {% for catalog in categories %}
+            <li><a class="link" href="{{ url_for('showItems', catalog_name = catalog.name) }}">{{ catalog.name }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="clearer"></div>
+    </div>
+    <div class="box">
+        <h1 class="header header-latest-items">Latest Items</h1>
+        <ul class="category items">
+            {% for latestItem in latestItems %}
+            <li><a class="link" href="{{ url_for('showItem', catalog_name = latestItem.catalog.name, item_name = latestItem.name) }}">{{ latestItem.name }} ( {{ latestItem.catalog.name }} )</a></li>
+            {% endfor %}
+        </ul>
+        <div class="clearer"></div>
+    </div>
+</div>
+{% endblock %}

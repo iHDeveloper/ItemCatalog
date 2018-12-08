@@ -71,7 +71,7 @@ def gconnect():
     login_session['user_id'] = user_id
     return "Login successfully! Redirecting...";
 
-
+@app.route('/login')
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['state'] = state

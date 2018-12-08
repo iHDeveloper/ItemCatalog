@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, redirect, url_for
 from flask import session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -74,11 +74,11 @@ def gconnect():
 
 @app.route('/gdisconect')
 def gdisconnect():
-    credentials = login_session.get('credentials')
-    if credentials is not None:
+    if login_session['credentials'] is None:
         return render_template('error.html')
+    credentials = login_session['credentials']
     access_token = credentials['access_token']
-    url = "https://www.googleapis.com/o/oauth2/revoke?token=%s" % access_token
+    url = ( "https://accounts.google.com/o/oauth2/revoke?token=%s" % access_token ) 
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     if result['status'] == '200':

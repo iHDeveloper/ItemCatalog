@@ -4,21 +4,13 @@
 
 <script src="//apis.google.com/js/platform.js?onload=start"></script>
 
-<div id="signinButton">
-    <span class="g-signin" data-scope="openid email" data-clientid="706966723806-303ljbj0n020es5viir8qvefjenf5c7h.apps.googleusercontent.com" data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback"
-        data-approvalprompt="force">
-        </span>
-</div>
-
-<div id="result"></div>
-
 <script>
     function signInCallback(authResult) {
         if (authResult['code']) {
             $('#signinButton').attr('style', 'display: none')
             $.ajax({
                 type: 'POST',
-                url: '{{ url_for("gconnect", state) }}',
+                url: '{{ url_for("gconnect") }}?state={{state}}',
                 processData: false,
                 contentType: 'application/octet-stream; charset=utf-8',
                 data: authResult['code'],
@@ -38,4 +30,16 @@
         }
     }
 </script>
+
+<div class="container">
+    <h1>Sign in with your provider</h1>
+    <hr>
+    <div id="signinButton" style="margin-top:1em;">
+        <span class="g-signin" data-scope="openid email" data-clientid="706966723806-303ljbj0n020es5viir8qvefjenf5c7h.apps.googleusercontent.com" data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback"
+            data-approvalprompt="force">
+            </span>
+    </div>
+</div>
+
+<div id="result"></div>
 {% endblock %}

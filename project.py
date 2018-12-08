@@ -71,6 +71,27 @@ def gconnect():
     login_session['user_id'] = user_id
     return "Login successfully! Redirecting...";
 
+
+@app.route('/gdisconect')
+def gdisconnect():
+    credentials = login_session.get('credentials')
+    if credentials is not None:
+        return render_template('error.html')
+    access_token = credentials['access_token']
+    url = "https://www.googleapis.com/o/oauth2/revoke?token=%s" % access_token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    if result['status'] == '200':
+        del login_session['credentials']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        return redirect(url_for('main'))
+    else:
+        return render_template('error.html')
+
+
 @app.route('/login')
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))

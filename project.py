@@ -75,28 +75,28 @@ def gconnect():
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['state'] = state
-    return render_template('login.html', state = state)
+    return render_template('login.html', state = state, login_session = login_session)
 
 
 @app.route('/')
 def main():
     categories = session.query(Catalog).all()
     latestItems = session.query(Item).order_by('created_date').limit(10)
-    return render_template('main.html', categories = categories, latestItems = latestItems)
+    return render_template('main.html', categories = categories, latestItems = latestItems, login_session = login_session)
 
 
 @app.route('/catalog/<catalog_name>/items')
 def showItems(catalog_name):
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
     items = session.query(Item).filter_by(catalog_id = catalog.id).all()
-    return render_template('items.html', items = items, catalog = catalog)
+    return render_template('items.html', items = items, catalog = catalog, login_session = login_session)
 
 
 @app.route('/catalog/<catalog_name>/<item_name>')
 def showItem(catalog_name, item_name):
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
     item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
-    return render_template('item.html', item = item, catalog = catalog)
+    return render_template('item.html', item = item, catalog = catalog, login_session = login_session)
 
 
 def getUserID(email):

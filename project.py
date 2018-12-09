@@ -108,6 +108,8 @@ def main():
 
 @app.route('/catalogs/new', methods=['GET', 'POST'])
 def newCatalog(catalog_name):
+    if 'user_id' is None:
+        return redirect(url_for('login'))
     if request.method == 'POST':
         catalog = Catalog(name = request.form['name'], user_id = login_session['user_id'])
         session.add(catalog)
@@ -132,7 +134,11 @@ def showItem(catalog_name, item_name):
 
 @app.route('/catalog/<catalog_name>/<item_name>/edit', methods=['GET', 'POST'])
 def editItem(catalog_name, item_name):
+    if 'user_id' is None:
+        return redirect(url_for('login'))
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
+    if login_session['user_id'] != catalog.user.id:
+        return render_template('unauthorized.html')
     item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
     if request.method == 'POST':
         item.name = request.form['name']
@@ -145,7 +151,11 @@ def editItem(catalog_name, item_name):
 
 @app.route('/catalog/<catalog_name>/<item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(catalog_name, item_name):
+    if 'user_id' is None:
+        return redirect(url_for('login'))
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
+    if login_session['user_id'] != catalog.user.id:
+        return render_template('unauthorized.html')
     item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
     if request.method == 'POST':
         session.delete(item)

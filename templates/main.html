@@ -2,6 +2,8 @@
 <div class="container">
     <div class="box">
         <h1 class="header">Categories</h1>
+        {% if login_session['user_id'] == catalog.user.id %}
+        <a href="{{ url_for('newCatalog') }}">New</a> {% endif %}
         <ul class="category">
             {% for catalog in categories %}
             <li><a class="link" href="{{ url_for('showItems', catalog_name = catalog.name) }}">{{ catalog.name }}</a></li>

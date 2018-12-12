@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, redirect, url_for
+from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify
 from flask import session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -100,11 +100,19 @@ def login():
 
 
 @app.route('/')
+@app.route('/catalogs')
 def main():
     isLogined = 'user_id' in login_session
     categories = session.query(Catalog).all()
     latestItems = session.query(Item).order_by('created_date').limit(10)
     return render_template('main.html', categories = categories, latestItems = latestItems, isLogined = isLogined)
+
+
+@app.route('/catalogs.json')
+def catalogsJSON():
+    categories = session.query(Catalog).all()
+    latestItems = session.query(Item).order_by('created_date').limit(10)
+    return jsonify(Catalogs=[i.serialize for i in categories], LatestItems=[i.serialize for i in latestItems])
 
 
 @app.route('/catalogs/new', methods=['GET', 'POST'])
@@ -126,11 +134,25 @@ def showItems(catalog_name):
     return render_template('items.html', items = items, catalog = catalog, login_session = login_session)
 
 
+@app.route('/catalog/<catalog_name>/items.json')
+def showItemsJSON(catalog_name):
+    catalog = session.query(Catalog).filter_by(name = catalog_name).one()
+    items = session.query(Item).filter_by(catalog_id = catalog.id).all()
+    return jsonify(Catalog=catalog.serialize, Items=[i.serialize for i in items])
+
+
 @app.route('/catalog/<catalog_name>/<item_name>')
 def showItem(catalog_name, item_name):
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
     item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
     return render_template('item.html', item = item, catalog = catalog, login_session = login_session)
+
+
+@app.route('/catalog/<catalog_name>/<item_name>.json')
+def showItemJSON(catalog_name, item_name):
+    catalog = session.query(Catalog).filter_by(name = catalog_name).one()
+    item = session.query(Item).filter_by(catalog_id = catalog.id, name = item_name).one()
+    return jsonify(Catalog=catalog.serialize, Item=item.serialize)
 
 
 @app.route('/catalog/<catalog_name>/new', methods=['GET', 'POST'])
@@ -202,5 +224,5 @@ def createUser(login_session):
 if __name__ == '__main__':
     app.secret_key = 'super_secure'
     app.debug = True
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=2030)
 

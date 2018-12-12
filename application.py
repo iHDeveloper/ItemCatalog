@@ -112,7 +112,11 @@ def login():
     state = ''.join(random.choice(s) for x in range(32))
     login_session['state'] = state
     where = 'login.html'
-    return render_template(where, state=state, login_session=login_session)
+    return render_template(
+        where, state=state,
+        login_session=login_session,
+        CLIENT_ID=CLIENT_ID
+    )
 
 
 @app.route('/')

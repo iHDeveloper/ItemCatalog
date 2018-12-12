@@ -101,21 +101,22 @@ def login():
 
 @app.route('/')
 def main():
+    isLogined = 'user_id' in login_session
     categories = session.query(Catalog).all()
     latestItems = session.query(Item).order_by('created_date').limit(10)
-    return render_template('main.html', categories = categories, latestItems = latestItems, login_session = login_session)
+    return render_template('main.html', categories = categories, latestItems = latestItems, isLogined = isLogined)
 
 
 @app.route('/catalogs/new', methods=['GET', 'POST'])
-def newCatalog(catalog_name):
-    if 'user_id' is None:
+def newCatalog():
+    if 'user_id' not in login_session:
         return redirect(url_for('login'))
     if request.method == 'POST':
         catalog = Catalog(name = request.form['name'], user_id = login_session['user_id'])
         session.add(catalog)
         session.commit()
         return redirect(url_for('main'))
-    return render_template('newCatalog.html', catalog = catalog)
+    return render_template('newCatalog.html')
 
 
 @app.route('/catalog/<catalog_name>/items')
@@ -132,9 +133,20 @@ def showItem(catalog_name, item_name):
     return render_template('item.html', item = item, catalog = catalog, login_session = login_session)
 
 
+@app.route('/catalog/<catalog_name>/new', methods=['GET', 'POST'])
+def newItem(catalog_name):
+    catalog = session.query(Catalog).filter_by(name = catalog_name).one()
+    if request.method == 'POST':
+        item = Item(name = request.form['name'], description = request.form['description'], catalog_id = catalog.id)
+        session.add(item)
+        session.commit()
+        return redirect(url_for('showItems', catalog_name = catalog_name))
+    return render_template('newItem.html', catalog = catalog)
+
+
 @app.route('/catalog/<catalog_name>/<item_name>/edit', methods=['GET', 'POST'])
 def editItem(catalog_name, item_name):
-    if 'user_id' is None:
+    if 'user_id' not in login_session:
         return redirect(url_for('login'))
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
     if login_session['user_id'] != catalog.user.id:
@@ -151,7 +163,7 @@ def editItem(catalog_name, item_name):
 
 @app.route('/catalog/<catalog_name>/<item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(catalog_name, item_name):
-    if 'user_id' is None:
+    if 'user_id' not in login_session:
         return redirect(url_for('login'))
     catalog = session.query(Catalog).filter_by(name = catalog_name).one()
     if login_session['user_id'] != catalog.user.id:

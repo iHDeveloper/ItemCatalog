@@ -127,7 +127,8 @@ def main():
     lt = session.query(Item).order_by('created_date').limit(10)
     return render_template(
         'main.html', categories=catgs,
-        latestItems=lt, isLogined=isLogined
+        latestItems=lt, isLogined=isLogined,
+        login_session=login_session
     )
 
 

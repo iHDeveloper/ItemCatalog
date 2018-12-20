@@ -4,7 +4,7 @@
         <h1 class="header">{{ item.name }}</h1>
         <p>{{ item.description }}</p>
     </div>
-    {% if login_session['user_id'] == catalog.user.id %}
+    {% if if 'user_id' in login_session and login_session['user_id'] == catalog.user.id %}
     <a href="{{ url_for('editItem', catalog_name = catalog.name, item_name = item.name) }}">Edit </a> |
     <a href="{{ url_for('deleteItem', catalog_name = catalog.name, item_name = item.name) }}">Delete</a> {% endif %}
 </div>

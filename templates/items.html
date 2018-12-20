@@ -2,7 +2,7 @@
 <div class="container">
     <div class="box">
         <h1 class="header">{{ catalog.name }}</h1>
-        {% if 'user_id' in login_session %}
+        {% if 'user_id' in login_session and login_session['user_id'] == catalog.user.id %}
         <a href="{{ url_for('newItem', catalog_name = catalog.name) }}">New</a> {% endif %}
         <ul class="category items">
             {% for item in items %}

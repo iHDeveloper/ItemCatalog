@@ -24,6 +24,9 @@ CLIENT_ID = CLIENT_ID['web']['client_id']
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """
+    Here where the we do the google oauth2 magic
+    """
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invaild state parameter'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -87,6 +90,9 @@ def gconnect():
 
 @app.route('/gdisconect')
 def gdisconnect():
+    """
+    Telling google that this user wants to sign out from our service
+    """
     if login_session['credentials'] is None:
         return render_template('error.html')
     credentials = login_session['credentials']
@@ -108,6 +114,10 @@ def gdisconnect():
 
 @app.route('/login')
 def login():
+    """
+    Here we show the login page with all of the requirements
+    that we need for the login process
+    """
     s = string.ascii_uppercase + string.digits
     state = ''.join(random.choice(s) for x in range(32))
     login_session['state'] = state
@@ -122,6 +132,9 @@ def login():
 @app.route('/')
 @app.route('/catalogs')
 def main():
+    """
+    Shows the main page
+    """
     isLogined = 'user_id' in login_session
     catgs = session.query(Catalog).all()
     lt = session.query(Item).order_by('created_date').limit(10)
@@ -134,6 +147,9 @@ def main():
 
 @app.route('/catalogs.json')
 def catalogsJSON():
+    """
+    Returns the catalogs and latest items as JSON
+    """
     catgs = session.query(Catalog).all()
     lt = session.query(Item).order_by('created_date').limit(10)
     return jsonify(
@@ -144,6 +160,9 @@ def catalogsJSON():
 
 @app.route('/catalogs/new', methods=['GET', 'POST'])
 def newCatalog():
+    """
+    Create catalog if the user is loggined
+    """
     if 'user_id' not in login_session:
         return redirect(url_for('login'))
     if request.method == 'POST':
@@ -157,6 +176,11 @@ def newCatalog():
 
 @app.route('/catalog/<catalog_name>/items')
 def showItems(catalog_name):
+    """
+    Show the items of the selected catalog
+
+    catalog_name - The name of the catalog
+    """
     catalog = session.query(Catalog).filter_by(name=catalog_name).one()
     items = session.query(Item).filter_by(catalog_id=catalog.id).all()
     return render_template(
@@ -168,6 +192,11 @@ def showItems(catalog_name):
 
 @app.route('/catalog/<catalog_name>/items.json')
 def showItemsJSON(catalog_name):
+    """
+    Returns the items of the selected catalog as JSON
+
+    catalog_name - The name of the catalog
+    """
     catalog = session.query(Catalog).filter_by(name=catalog_name).one()
     items = session.query(Item).filter_by(catalog_id=catalog.id).all()
     return jsonify(
@@ -178,6 +207,12 @@ def showItemsJSON(catalog_name):
 
 @app.route('/catalog/<catalog_name>/<item_name>')
 def showItem(catalog_name, item_name):
+    """
+    Show an item with the description of it
+    
+    catalog_name - The name of the catalog
+    item_name - The name of the item
+    """
     catalog = session.query(Catalog).filter_by(name=catalog_name).one()
     item = session.query(Item).filter_by(
         catalog_id=catalog.id,
@@ -192,6 +227,12 @@ def showItem(catalog_name, item_name):
 
 @app.route('/catalog/<catalog_name>/<item_name>.json')
 def showItemJSON(catalog_name, item_name):
+    """
+    Returns an item as JSON
+
+    catalog_name - The name of the catalog
+    item_name - The name of the item
+    """
     catalog = session.query(Catalog).filter_by(name=catalog_name).one()
     item = session.query(Item).filter_by(
         catalog_id=catalog.id,
@@ -205,6 +246,11 @@ def showItemJSON(catalog_name, item_name):
 
 @app.route('/catalog/<catalog_name>/new', methods=['GET', 'POST'])
 def newItem(catalog_name):
+    """
+    Create new item in selected catalog
+
+    catalog_name - The name of the catalog
+    """
     catalog = session.query(Catalog).filter_by(name=catalog_name).one()
     if request.method == 'POST':
         item = Item(
@@ -225,6 +271,12 @@ def newItem(catalog_name):
 
 @app.route('/catalog/<catalog_name>/<item_name>/edit', methods=['GET', 'POST'])
 def editItem(catalog_name, item_name):
+    """
+    Edit item of the selected catalog
+
+    catalog_name - The name of the catalog
+    item_name - The name of the item
+    """
     if 'user_id' not in login_session:
         return redirect(url_for('login'))
     catalog = session.query(Catalog).filter_by(name=catalog_name).one()
@@ -254,6 +306,12 @@ def editItem(catalog_name, item_name):
     methods=['GET', 'POST']
 )
 def deleteItem(catalog_name, item_name):
+    """
+    Delete an item in selected catalog
+
+    catalog_name - The name of the catalog
+    item_name - The name of the item
+    """
     if 'user_id' not in login_session:
         return redirect(url_for('login'))
     catalog = session.query(Catalog).filter_by(name=catalog_name).one()
@@ -277,6 +335,11 @@ def deleteItem(catalog_name, item_name):
 
 
 def getUserID(email):
+    """
+    Get the user ID by Email from database
+
+    email - The email of the user to find the id by it in database
+    """
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -285,11 +348,21 @@ def getUserID(email):
 
 
 def getUserInfo(user_id):
+    """
+    Get the information of the given user id from database
+
+    user_id - The user id to find it in the database
+    """
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def createUser(login_session):
+    """
+    Create a user with data from login session in database
+
+    login_session - the login session of the user
+    """
     username = login_session['username']
     email = login_session['email']
     picture = login_session['picture']

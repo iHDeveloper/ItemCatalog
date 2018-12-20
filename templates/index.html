@@ -17,7 +17,7 @@
             </li>
         </ul>
         <ul class="header header-right">
-            {% if 'username' is not in login_session %}
+            {% if 'user_id' is not in login_session %}
             <li class="header"><a class="header-button" href="{{ url_for('login') }}">Log In</a></li>
             {% else %}
             <li class="header"><a class="header-button" href="{{ url_for('gdisconnect') }}">Log Out</a></li>

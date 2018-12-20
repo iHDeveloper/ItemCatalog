@@ -29,3 +29,21 @@ An application that shows your items in catalog to everyone.
 - Feed this database with some data `python seeder.py` **( optional )**
 - Run the application `python application.py`
 - Enjoy using the app :)
+
+## JSON API
+**GET: `/catalogs.json`**
+> Returns the list of the catalogs and latest items
+
+---
+**GET: `/catalog/<catalog_name>/items.json`**
+> Return all the items of the selected catalog
+> Paramters:
+> - **catalog_name** - The name of the catalog
+
+---
+**GET: `/catalog/<catalog_name>/<item_name>.json`**
+> Returns the description of the item
+>
+> Paramters:
+> - **catalog_name** - The name of the catalog
+> - **item_name** - The name of the item

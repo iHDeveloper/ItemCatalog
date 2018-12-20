@@ -8,6 +8,7 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = 'user'
 
@@ -24,6 +25,7 @@ class User(Base):
             'email': self.email,
             'picture': self.picture,
         }
+
 
 class Catalog(Base):
     __tablename__ = 'catalog'
@@ -51,7 +53,7 @@ class Item(Base):
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
     catalog_id = Column(Integer, ForeignKey('catalog.id'))
     catalog = relationship(Catalog)
-    
+
     @property
     def serialize(self):
         return {
